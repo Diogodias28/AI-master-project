@@ -38,4 +38,5 @@ python3.12 app.py
 A aplicação fica disponível em `http://localhost:5000`.
 
 ## TODO
-Adcionar SYSTEM.md para criar o deepfashion-llava
+Adicionar configuração do ollama local
+Adicionar SYSTEM.md para criar o deepfashion-llava
