@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepFashion AI — Catalogação Inteligente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DeepFashion AI</h1>
+            <p>Upload de imagem para catalogação automática de peças de roupa</p>
+        </header>
+
+        <main>
+                <section class="upload-section" id="drop-zone">
+                <div class="upload-box">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <p class="upload-text">Arraste uma imagem ou <span class="browse">clique para procurar</span></p>
+                    <p class="upload-hint">PNG, JPG, JPEG até 16 MB</p>
+                    <input type="file" id="file-input" accept="image/png,image/jpg,image/jpeg,image/webp,image/gif">
+                </div>
+            </section>
+
+            <section class="options-bar">
+                <div class="model-select">
+                    <label for="model-select">Modelo CLIP</label>
+                    <select id="model-select">
+                        {% for key, label in models.items() %}
+                        <option value="{{ key }}" {% if key == default_model %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="tta-toggle">
+                    <label>
+                        <input type="checkbox" id="no-tta">
+                        <span>Desativar Data Augmentation (TTA)</span>
+                    </label>
+                </div>
+            </section>
+
+            <section class="result-section" id="result-section" style="display:none;">
+                <div class="result-grid">
+                    <div class="image-preview">
+                        <h2>Imagem Enviada</h2>
+                        <img id="preview-img" src="" alt="Preview">
+                    </div>
+
+                    <div class="metadata-panel">
+                        <h2>Metadados Previstos</h2>
+
+                        <div class="card category-card">
+                            <h3>Categoria Principal</h3>
+                            <div class="category-main" id="category-main">—</div>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidence-fill"></div>
+                                <span id="confidence-text">—</span>
+                            </div>
+                        </div>
+
+                        <div class="card topk-card">
+                            <h3>Top Categorias</h3>
+                            <ul id="topk-list"></ul>
+                        </div>
+
+                        <div class="card color-card">
+                            <h3>Top 5 Cores</h3>
+                            <div class="color-swatch" id="color-swatch"></div>
+                            <div id="colors-list" class="tags"></div>
+                        </div>
+
+                        <div class="card attrs-card">
+                            <h3>Top 10 Atributos</h3>
+                            <div id="attrs-list" class="tags"></div>
+                        </div>
+
+                        <div class="card json-card">
+                            <h3>JSON Estruturado</h3>
+                            <pre id="json-output"></pre>
+                            <button class="btn-copy" id="btn-copy">Copiar JSON</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="loader" id="loader" style="display:none;">
+                <div class="spinner"></div>
+                <p>A analisar com CLIP + TTA…</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by CLIP / Fashion-CLIP · DeepFashion Category & Attribute Prediction Benchmark</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
