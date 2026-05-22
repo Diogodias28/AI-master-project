@@ -1,7 +1,7 @@
 # DeepFashion AI — Catalogação Inteligente
 
 Interface Web para upload e catalogação automática de peças de roupa via CLIP / Fashion-CLIP e Ollama (LLaVA).
-
+![UI](./ui.png)
 ## Project Tree
 
 ```
