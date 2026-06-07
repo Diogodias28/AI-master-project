@@ -1,7 +1,7 @@
 # DeepFashion AI — Catalogação Inteligente
 
-Interface Web para upload e catalogação automática de peças de roupa via CLIP / Fashion-CLIP, com suporte total para Ollama (LLaVA) já configurado.
-
+Interface Web para upload e catalogação automática de peças de roupa via CLIP / Fashion-CLIP e Ollama (LLaVA).
+![UI](./ui.png)
 ## Project Tree
 
 ```
@@ -38,4 +38,8 @@ python3.12 app.py
 A aplicação fica disponível em `http://localhost:5000`.
 
 ## TODO
-Adcionar SYSTEM.md para criar o deepfashion-llava
+- Adicionar configuração do ollama local. 
+
+- Adicionar SYSTEM.md para criar o deepfashion-llava.
+
+- Arranjar alternativas para o ollama (ai gateway vercel/ollama cloud?)
