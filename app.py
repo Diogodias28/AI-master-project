@@ -46,7 +46,7 @@ def get_predictor(model_name: str = DEFAULT_MODEL):
     global predictor, current_model
     if predictor is None or current_model != model_name:
         print(f"[Flask] A carregar modelo {model_name} …")
-        predictor = FashionPredictor(data_root=".", model_name=model_name, device=None, use_tta=True)
+        predictor = FashionPredictor(data_root="deepfashion", model_name=model_name, device=None, use_tta=True)
         current_model = model_name
     return predictor
 

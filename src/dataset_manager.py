@@ -107,6 +107,6 @@ def split_dataset(data_root: Path, index_json: str = "dataset_index.json", train
 
 
 if __name__ == "__main__":
-    data_root = Path(".")
+    data_root = Path("deepfashion")
     index = validate_images(data_root)
     split_dataset(data_root)

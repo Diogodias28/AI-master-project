@@ -94,7 +94,7 @@ class FashionPredictor:
     """
     Encapsula todo o pipeline CLIP para previsão de moda DeepFashion.
     """
-    def __init__(self, data_root: str | Path = ".",
+    def __init__(self, data_root: str | Path = "deepfashion",
                  model_name: str = "patrickjohncyh/fashion-clip",
                  device: str | None = None,
                  attr_threshold: float = 0.22,
