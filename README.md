@@ -47,14 +47,9 @@ Interface Web para upload e catalogação automática de peças de roupa via CLI
 ├── scripts
 │   ├── eval_cnn.py            # Avaliação do modelo CNN
 │   ├── setup_dataset.py
-│   ├── train_cnn.py           # Treino da CNN (categoria)
-│   └── train_multitask.py     # Treino da CNN Multi-Task (cat + attrs)
+│   └── train_cnn.py           # Treino da CNN (categoria)
 ├── src
 │   ├── cnn_dataset.py         # Dataset PyTorch para CNN (categoria)
-│   ├── cnn_multitask_dataset.py  # Dataset Multi-Task (cat + attrs)
-│   ├── cnn_multitask_model.py    # Modelo ResNet50 + 2 cabeças
-│   ├── cnn_multitask_predictor.py  # Inferência Multi-Task
-│   ├── cnn_multitask_trainer.py    # Treino Multi-Task
 │   ├── cnn_predictor.py       # Inferência CNN (schema JSON compatível)
 │   ├── cnn_trainer.py         # Lógica de treino transfer-learning
 │   ├── dataset_manager.py
