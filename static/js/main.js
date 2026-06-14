@@ -14,6 +14,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCopy = document.getElementById('btn-copy');
     const modelSelect = document.getElementById('model-select');
     const noTtaCheck = document.getElementById('no-tta');
+    const ttaToggle = document.querySelector('.tta-toggle');
+
+    // Modelos que suportam TTA (Data Augmentation)
+    const TTA_MODELS = new Set([
+        "patrickjohncyh/fashion-clip",
+        "openai/clip-vit-base-patch32",
+        "openai/clip-vit-base-patch16",
+        "laion/CLIP-ViT-B-32-laion2B-s34B-b79K",
+        "openai/clip-vit-large-patch14",
+    ]);
+
+    function updateTtaVisibility() {
+        const supportsTta = TTA_MODELS.has(modelSelect.value);
+        ttaToggle.style.display = supportsTta ? 'flex' : 'none';
+        if (!supportsTta) {
+            noTtaCheck.checked = false;
+        }
+    }
+
+    // Inicializa visibilidade do TTA
+    updateTtaVisibility();
 
     let lastFile = null;
 
@@ -34,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Re-executa predição automaticamente quando o modelo ou TTA mudar
     modelSelect.addEventListener('change', () => {
+        updateTtaVisibility();
         if (lastFile) handleFile(lastFile);
     });
     noTtaCheck.addEventListener('change', () => {
