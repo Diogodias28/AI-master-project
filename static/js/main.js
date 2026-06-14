@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const attrsList = document.getElementById('attrs-list');
     const jsonOutput = document.getElementById('json-output');
     const btnCopy = document.getElementById('btn-copy');
+    const modelSelect = document.getElementById('model-select');
+    const noTtaCheck = document.getElementById('no-tta');
+
+    let lastFile = null;
 
     // Drag & drop visuals
     ['dragenter', 'dragover'].forEach(evt => {
@@ -28,11 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.files.length) handleFile(e.target.files[0]);
     });
 
+    // Re-executa predição automaticamente quando o modelo ou TTA mudar
+    modelSelect.addEventListener('change', () => {
+        if (lastFile) handleFile(lastFile);
+    });
+    noTtaCheck.addEventListener('change', () => {
+        if (lastFile) handleFile(lastFile);
+    });
+
     function handleFile(file) {
         if (!file.type.startsWith('image/')) {
             alert('Por favor envie um ficheiro de imagem.');
             return;
         }
+        lastFile = file;
         // Preview local
         const url = URL.createObjectURL(file);
         previewImg.src = url;
@@ -41,8 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
         resultSection.style.display = 'none';
         loader.style.display = 'block';
 
-        const noTta = document.getElementById('no-tta').checked;
-        const model = document.getElementById('model-select').value;
+        const noTta = noTtaCheck.checked;
+        const model = modelSelect.value;
+        const loaderText = document.getElementById('loader-text');
+        const modelLabel = modelSelect.options[modelSelect.selectedIndex].text;
+        loaderText.textContent = `A analisar com ${modelLabel}…`;
         const formData = new FormData();
         formData.append('image', file);
         formData.append('no_tta', noTta ? 'true' : 'false');

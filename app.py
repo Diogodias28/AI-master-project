@@ -17,6 +17,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from predictor import FashionPredictor
 from ollama_predictor import predict_with_ollama
+from cnn_predictor import CNNPredictor
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "uploads"
@@ -27,19 +28,25 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 # ── Catálogo de modelos disponíveis ──
 AVAILABLE_MODELS = {
     "patrickjohncyh/fashion-clip": "Fashion-CLIP (recomendado)",
+    "cnn/resnet50": "ResNet50 (CNN — apenas categoria)",
+    "ollama/llava": "LLaVA via Ollama (multimodal local)",
     "openai/clip-vit-base-patch32": "CLIP ViT-B/32 (OpenAI)",
     "openai/clip-vit-base-patch16": "CLIP ViT-B/16 (OpenAI)",
     "laion/CLIP-ViT-B-32-laion2B-s34B-b79K": "CLIP ViT-B/32 (LAION-2B)",
     "openai/clip-vit-large-patch14": "CLIP ViT-L/14 (OpenAI — pesado)",
-    "ollama/llava": "LLaVA via Ollama (multimodal local)",
 }
 
 DEFAULT_MODEL = "patrickjohncyh/fashion-clip"
 
-# ── Inicialização do modelo CLIP (pesado, carrega uma vez) ──
+# ── Inicialização dos modelos (lazy) ──
 print(f"[Flask] A inicializar FashionPredictor com {DEFAULT_MODEL} …")
 predictor = None
 current_model = None
+
+# CNN Predictor (lazy init)
+cnn_predictor = None
+CNN_CHECKPOINT = os.environ.get("CNN_CHECKPOINT", "models/resnet50_best.pth")
+CNN_MODEL_NAME = os.environ.get("CNN_MODEL", "resnet50")
 
 
 def get_predictor(model_name: str = DEFAULT_MODEL):
@@ -49,6 +56,20 @@ def get_predictor(model_name: str = DEFAULT_MODEL):
         predictor = FashionPredictor(data_root="deepfashion", model_name=model_name, device=None, use_tta=True)
         current_model = model_name
     return predictor
+
+
+def get_cnn_predictor():
+    global cnn_predictor
+    if cnn_predictor is None:
+        ckpt = Path(CNN_CHECKPOINT)
+        if not ckpt.exists():
+            raise FileNotFoundError(
+                f"Checkpoint CNN não encontrado: {ckpt}. "
+                "Treina primeiro com: python scripts/train_cnn.py"
+            )
+        print(f"[Flask] A carregar CNNPredictor ({CNN_MODEL_NAME}) de {ckpt} …")
+        cnn_predictor = CNNPredictor(checkpoint_path=ckpt, model_name=CNN_MODEL_NAME)
+    return cnn_predictor
 
 
 def allowed_file(filename):
@@ -97,6 +118,8 @@ def predict():
     try:
         if model_name == "ollama/llava":
             pred = predict_with_ollama(upload_path)
+        elif model_name == "cnn/resnet50":
+            pred = get_cnn_predictor().predict(upload_path)
         else:
             pred = get_predictor(model_name).predict(upload_path, use_tta=not no_tta)
 
