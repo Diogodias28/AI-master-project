@@ -166,4 +166,3 @@ Parâmetros opcionais no `POST`:
 ## TODO
 - Arranjar alternativas para o ollama (AI gateway Vercel / Ollama Cloud?)
 - Treinar e avaliar a CNN ResNet50 no test set completo para benchmark vs CLIP
-- Gerar slides e relatório final (T4.1–T4.3)
